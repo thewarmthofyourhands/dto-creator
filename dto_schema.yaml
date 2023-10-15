@@ -1,6 +1,0 @@
-- namespace: Eva\DtoCreator\Dto\Services
-  class: UserDto
-  properties:
-    namespace: string
-    class: string
-    huy: array

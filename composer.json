@@ -1,0 +1,24 @@
+{
+    "name": "eva/dto-creator",
+    "description": "Dto creator",
+    "keywords": [],
+    "homepage": "https://github.com/thewarmthofyourhands",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "thewarmthofyourhands"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "eva/common": "dev-main",
+        "eva/filesystem": "dev-main",
+        "eva/console": "dev-main",
+        "symfony/yaml": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eva\\DtoCreator\\": "src/"
+        }
+    }
+}

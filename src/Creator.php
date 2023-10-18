@@ -21,28 +21,65 @@ class Creator
         private readonly string $sourcePath,
     ) {}
 
-    private function parseSource(): array
+    private function parseSourceFile(string $sourceFilePath): array
     {
-        $ext = pathinfo($this->sourcePath, PATHINFO_EXTENSION);
+        $ext = pathinfo($sourceFilePath, PATHINFO_EXTENSION);
 
         if ('yaml' === $ext) {
-            return (new YamlParser($this->sourcePath))->parse();
+            return (new YamlParser($sourceFilePath))->parse();
         }
 
         if ('json' === $ext) {
-            return (new JsonParser($this->sourcePath))->parse();
+            return (new JsonParser($sourceFilePath))->parse();
         }
 
         throw new \RuntimeException("Unknown $ext extension of source file");
     }
 
+    private function scanSource(): array
+    {
+        $sourcePathList = [];
+
+        if (is_file($this->sourcePath)) {
+            return [$this->sourcePath];
+        }
+
+        $dirIterator = new \RecursiveDirectoryIterator($this->sourcePath);
+        $iterator = new \RecursiveIteratorIterator($dirIterator);
+
+        foreach ($iterator as $file) {
+            assert($file instanceof \SplFileInfo);
+            if ($file->isFile()) {
+                $sourcePathList[] = (string) $file;
+            }
+        }
+
+        return $sourcePathList;
+    }
+
+    private function parseSource(): \Generator
+    {
+        $sourceList = $this->scanSource();
+
+        foreach ($sourceList as $sourceFilePath) {
+            yield $this->parseSourceFile($sourceFilePath);
+        }
+    }
+
     public function create(): void
     {
-        $dtoSchemaList = $this->parseSource();
+        foreach ($this->parseSource() as $sourceSchema) {
+            $this->generateSchema($sourceSchema);
+        }
+    }
+
+    public function generateSchema(array $dtoSchemaList): void
+    {
         foreach ($dtoSchemaList as $dtoSchema) {
             $this->generateDto($dtoSchema);
         }
     }
+
     private function generateDto(DtoSchema $dtoSchema): void
     {
         $dtoTmp = $this->getDtoTmp($dtoSchema);

@@ -38,7 +38,7 @@ readonly class DtoTmp
         
         namespace {$this->namespace};
         
-        readonly class {$this->class}
+        final readonly class {$this->class}
         {
             public function __construct(
         {$this->getPropertiesTmp()}

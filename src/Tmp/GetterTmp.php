@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Eva\DtoCreator\Tmp;
 
+use Eva\Common\CaseConverter;
+
 class GetterTmp
 {
     public function __construct(
@@ -13,7 +15,7 @@ class GetterTmp
 
     private function getFunctionName(): string
     {
-        return 'get' . ucfirst($this->name);
+        return 'get' . ucfirst(CaseConverter::toCamelCase($this->name));
     }
 
     public function createTmp(): string

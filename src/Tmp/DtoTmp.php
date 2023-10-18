@@ -24,7 +24,7 @@ readonly class DtoTmp
     private function getGettersTmp(): string
     {
         return implode(
-            PHP_EOL,
+            PHP_EOL . PHP_EOL,
             array_map(fn(GetterTmp $getter) => $getter->createTmp(), $this->getterList),
         );
     }
